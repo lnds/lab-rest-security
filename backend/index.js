@@ -13,7 +13,7 @@ app.use(cors())
 app.use(express.json())
 
 // swagger doc
-app.use('/doc', swaggerUi.serve, swaggerUi.setupe(swaggerFile))
+app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 //crea una tarea
 app.post("/tareas", async (req, res) => {
@@ -51,7 +51,7 @@ app.get("/tareas/:id", async (req, res) => {
             "SELECT * FROM tareas WHERE id = $1",
             [id]
         )
-        if todo == null || todo.rows.length == 0) {
+        if (todo == null || todo.rows.length == 0) {
           res.status(404).send("tarea no encontrada")
         } else {
           res.json(todo.rows[0])

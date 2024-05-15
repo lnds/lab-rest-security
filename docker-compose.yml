@@ -1,6 +1,28 @@
-version: '3'
 
 services:
+
+  backend:
+    build: backend
+    command: "node index.js"
+    restart: always
+    environment:
+      - SERVER_PORT
+      - CONNECTION_URL
+    expose:
+      - ${SERVER_PORT}
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    depends_on:
+      - postgres
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+        - ./nginx-conf:/etc/nginx/conf.d
 
   postgres:
     image: postgres:15-alpine
@@ -13,6 +35,8 @@ services:
       - POSTGRES_SERVER=postgres
     expose:
       - 5432
+    volumes:
+      - ./data:/var/lib/postgresql/data
 
   flyway:
     image: flyway/flyway:7.7.0
